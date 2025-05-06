@@ -11,74 +11,49 @@
 </head>
 
 <body >
-        <div class="wrapper">
-            <!-- Connexion -->
-            <section >
-                <h1>Nouveau Examen</h1>
-                <form id="examen_form" action="/profile" method="post">
-                    <div class="inputbox2">
-                        <input type="text" id="titre" name="titre" placeholder="Titre" required>
-                    </div>
-                    <div class="inputbox2">
-                        <textarea class="descripcion" id="description" id="name" placeholder="Descrption de l'examen" ></textarea>
-                    </div>
+    <section class="section_examen" >
+        <h1>Nouveau Examen</h1>
+        <form id="examen_form" action="/profile" method="post" enctype="multipart/form-data">
+            <div class="inputbox2">
+                <input class="titre" type="text" id="titre" name="titre" placeholder="Titre" required>
+            </div>
+            <div class="inputbox2">
+                <textarea class="description" id="description" id="name" placeholder="Descrption de l'examen" ></textarea>
+            </div>
 
-                    <div class="inputbox2">
-                        <select name="cible" id="cible" required>
-                           <option value="" disabled selected>Choisissez le public ciblé</option>
-                           <option value="1 MIP S1">1 MIP S1</option>
-                           <option value="1 MIP S2">1 MIP S2</option>
-                           <option value="2 MIP S3">2 MIP S3</option>
-                           <option value="2 MIP S4">2 MIP S4</option>
-                           <option value="3 MIP S5">3 MIP S5</option>
-                           <option value="3 MIP S6">3 MIP S6</option>
-                        </select>
-                    </div>
+            <div class="inputbox2">
+                <select name="cible" id="cible" required>
+                   <option value="" disabled selected>Choisissez le public ciblé</option>
+                   <option value="1 MIP S1">1 MIP S1</option>
+                   <option value="1 MIP S2">1 MIP S2</option>
+                   <option value="2 MIP S3">2 MIP S3</option>
+                   <option value="2 MIP S4">2 MIP S4</option>
+                   <option value="3 MIP S5">3 MIP S5</option>
+                   <option value="3 MIP S6">3 MIP S6</option>
+                </select>
 
-                    <hr>
-                   	<h5>Questions</h5>
-                    <div id="questions">
-	                    <div class="inputbox2" id="question1">
-	                    	<h6>Question #1</h6>
-	                        <textarea id="ennonce1" id="ennonce1" placeholder="Tapez l'ennonce de la question" ></textarea>
-	                    </div>
-                    </div>
 
-                    <input type="hidden" name="numeroq" id="numeroq" value="1">
+            </div>
 
-                    <p onclick="ajouter_question()" href="">Ajouter une autre question </p>
-    <script type="text/javascript">
-    	function ajouter_question(){
-      	 	numquestions=parseInt(document.getElementById('numeroq').value);
+            <hr>
+           	<h5>Questions</h5>
+            <div class="row" id="questions"></div>
 
-      	 	var nuevoDiv = document.createElement("div");
-      		nuevoDiv.id = "question2";
-      		nuevoDiv.name = "question2";
-      		nuevoDiv.className = "inputbox2";
+            <input type="hidden" name="numeroq" id="numeroq" value="0">
 
-var divQ = "<h6>Question #" + (numquestions + 1) + "</h6>" +
-           "<textarea id='ennonce" + (numquestions + 1) + "' " +
-           "name='ennonce" + (numquestions + 1) + "' " +
-           "placeholder=\"Tapez l'énoncé de la question\">" +
-           "</textarea>"; 	
-      	 	nuevoDiv.innerHTML = divQ;
-      	 	document.getElementById('numeroq').value=(numquestions+1);
-			document.getElementById('questions').appendChild(nuevoDiv);
-			}
-      </script>
 
-                   
-                   
-                    <button type="submit">Valider</button>
-                    
-                </form>
-            </section>
 
-            <!-- Inscription -->
-            <section class="register">                
-            </section>
+        <div class="row">
+            <p>Ajouter une autre question 
+                <button type="button" class="button_ajouter" onclick="ajouter_question('D')"> Directe</button> 
+                ou 
+                <button type="button" class="button_ajouter" onclick="ajouter_question('Q')">QCM</button> 
+            </p>  
+            <button type="submit">Valider</button>
         </div>
-
+            
+        </form>
+    </section> 
     <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <script src="/JS/script.js"></script>
 </body>
