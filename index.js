@@ -4,12 +4,12 @@ const PORT = 3000;
 const connection = require('./db'); // Importamos la conexión de db.js
 const path = require('path');
 const bodyParser = require('body-parser');
+
 app.use(express.urlencoded({ extended: true })); // ← necesario para manejar datos de formularios HTML
-
-
 app.use(bodyParser.json());
 app.use(express.static('public'));
 //app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json()); // para JSON
 
 
 app.set('view engine', 'ejs');
@@ -50,6 +50,39 @@ app.post('/profile', (req, res) => {
     res.render('profile', { utilisateur });
   });
 });
+
+
+app.post('/valider_examen', (req, res) => {
+  const { titre } = req.body;
+    res.send(titre);
+
+
+
+
+  /*const { email_login, password_login, tipe_login } = req.body;
+
+  const isEnseignant = req.body.tipe_login !== undefined;  Si el checkbox está marcado
+  var tabla= isEnseignant ? 'enseignant' : 'etudiant'
+
+  const query = "SELECT * FROM "+tabla+" WHERE mail = ? AND mot_de_passe = md5(?) ";
+  connection.query(query, [email_login, password_login], (err, results) => {
+
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Erreur: problème avec la base de données');
+    }
+
+    if (results.length === 0) {
+      return res.status(401).send('Utilisateur non trouvé ou mot de passe incorrect');
+    }
+
+      const utilisateur = results[0];
+
+    res.render('profile', { utilisateur });
+  });*/
+});
+
+
 
 app.post('/inserer_utilisateur', (req, res) => {
   const { nom, prenom, email, password, ddns, sexe, etablissement, filiere, tipe } = req.body;

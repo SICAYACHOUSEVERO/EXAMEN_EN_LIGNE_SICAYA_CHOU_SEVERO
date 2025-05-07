@@ -1,15 +1,22 @@
-function ajouter_reponse(id){
 
-    var nuevoReponse = document.createElement("input");
-    nuevoReponse.id = "reponse"+5;
-    nuevoReponse.name = "reponse5";
-    nuevoReponse.className = "reponse_qcm";
-    nuevoReponse.type = "text";
-    nuevoReponse.placeholder = "Tapez la reponse";
+function ajouter_reponse(id){
+    numReponses=parseInt(document.getElementById('reponses'+id).value);
+    document.getElementById('reponses'+id).value=(numReponses+1);
+    alert(document.getElementById('reponses'+id).value);
+
+
+    var reponse = document.createElement("input");
+    reponse.id = "q"+id+"reponse"+(numReponses+1);
+    reponse.name = "q"+id+"reponse"+(numReponses+1);
+    reponse.className = "reponse_qcm";
+    reponse.type = "text";
+    reponse.placeholder = "Tapez la reponse";
+    reponse.required = true; 
+
 
     var nuevoCheckbox = document.createElement("input");
-    nuevoCheckbox.id = "cb"+5;
-    nuevoCheckbox.name = "cb5";
+    nuevoCheckbox.id = "q"+id+"cb"+(numReponses+1);
+    nuevoCheckbox.name = "q"+id+"reponse"+(numReponses+1);
     nuevoCheckbox.className = "checkbox";
     nuevoCheckbox.type = "checkbox";
 
@@ -22,79 +29,173 @@ function ajouter_question(tipo){
             numq=parseInt(document.getElementById('numeroq').value);
             var espacios="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
+
             var nuevoDiv = document.createElement("div");
             nuevoDiv.id = "question"+(numq+1);
             nuevoDiv.name = "question";
             nuevoDiv.className = "inputbox2";
 
-            var divQ = "<h6>Question #" +(numq+1)+ espacios+
-            "Taux : <input type='number' class='taux' value='10' max='100' min='2' step='2' "+
-            " id='taux" +(numq+1) + "' name='taux" +(numq+1)+"' />%"+espacios+
+            var h6=document.createElement("h6");
+            h6.innerHTML+="Question " +tipo+" : "+ espacios+ "Taux : ";
 
-            "Duree : <input type='number' class='taux' value='60' max='1800' min='30' step='30' "+
-            " id='duree" +(numq+1) + "' name='duree" +(numq+1)+"' /> sec."+espacios+
+            var inputTaux=document.createElement("input");
+            inputTaux.type="number";
+            inputTaux.id = "taux"+(numq+1);
+            inputTaux.name= "taux"+(numq+1);
+            inputTaux.className= "taux";
+            inputTaux.value="10";
+            inputTaux.max="100";
+            inputTaux.min="2";
+            inputTaux.step="2";
 
-            "<select class='fichier' name='select" +(numq+1)+ "' id='select" +(numq+1)+ "'"+
-            " onchange='select_fichier(" +(numq+1) +")'>"+
-                "<option value='none' selected > + fichier </option>"+
-                "<option value='audio'> Audio </option>"+
-                "<option value='image'> Image </option>"+
-                "<option value='video'> Video </option></select> "+
-             "<label class='label_fichier' for='fichier" +(numq+1)+ "' id='label_fichier" +(numq+1)+ "'> Choisir</label>"+
-            "<input type='file' accept='image/*' name='fichier" +(numq+1)+ "' id='fichier" +(numq+1)+ "' disabled />"+
+            var inputDuree=document.createElement("input");
+            inputDuree.id = "duree"+(numq+1);
+            inputDuree.name= "duree"+(numq+1);
+            inputDuree.className= "taux";
+            inputDuree.type="number";
+            inputDuree.value="60";
+            inputDuree.max="1800";
+            inputDuree.min="30";
+            inputDuree.step="10";
 
-            "<button type='button' class='button_supprimer' onclick='supprimer_question(" +(numq+1) + 
-            ")'>Supprimer</button> </h6>"+
+            var selectF=document.createElement("select");
+            selectF.id = "select"+(numq+1);
+            selectF.name= "select"+(numq+1);
+            selectF.className= "fichier";
+            selectF.type="number";
 
-           "<textarea class='question' id='ennonce" +(numq+1) + "' " +
-           "name='ennonce" +(numq+1) + "' " +
-           "placeholder=\"Tapez l'énoncé de la question\">" +
-           "</textarea>";   
+            const options = [
+                { value: 'none', text: '+ fichier', selected: true },
+                { value: 'audio', text: 'Audio' },
+                { value: 'image', text: 'Image' },
+                { value: 'video', text: 'Video' }
+            ];
 
-           if(tipo=="D"){
-                divQ=divQ+"<h6>Reponses #" +(numq+1) + "</h6>" +
-           "<input class='reponse' type='text' id='reponse" +(numq+1) + "' " +
-           "name='reponse" +(numq+1) + "' " +
-           "placeholder='Tapez la reponse'/>";
+        options.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.text;
+        if (opt.selected) option.selected = true;
+        selectF.appendChild(option);
+        });
+        selectF.onchange = function () {
+            select_fichier(numq + 1); // Call your function with the current number
+        };
+
+        const label = document.createElement('label');
+        label.className = 'label_fichier';
+        label.setAttribute('for', 'fichier' + (numq + 1));
+        label.id = 'label_fichier' + (numq + 1);
+        label.textContent = ' Choisir';
+
+        const inputFile = document.createElement('input');
+        inputFile.type = 'file';
+        inputFile.name = 'fichier' + (numq + 1);
+        inputFile.id = 'fichier' + (numq + 1);
+        inputFile.disabled = true;
+
+        const bSupprimer = document.createElement('button');
+        bSupprimer.type = 'button';
+        bSupprimer.className = 'button_supprimer';
+        bSupprimer.textContent = 'Supprimer';
+        bSupprimer.onclick = function () {
+            supprimer_question(numq + 1);
+        };
+
+        var question = document.createElement("textarea");
+        question.id = "ennonce" +(numq+1);
+        question.name = "ennonce" +(numq+1);
+        question.className = "question";
+        question.type = "text";
+        question.placeholder = "Tapez l'énoncé de la question";
+        question.required = true;
+
+
+            var divR="";
+           if(tipo=="Directe"){
+                divR="<h6>Reponse</h6>" +
+               "<input class='reponse' type='text' id='reponse" +(numq+1) + "' " +
+               "name='reponse" +(numq+1) + "' " +
+               "placeholder='Tapez la reponse' required/>";
            }else{
-             divQ=divQ+"<h6>Reponses Question #" +(numq+1) + 
-        "<button type='button' class='button_ajouter' onclick='ajouter_reponse(" +(numq+1) + 
-           ")'>+Reponse</button> </h6>" +
-           "<input class='reponse_qcm' type='text' id='reponse" +(numq+1) + "' " +
-           "name='reponse" +(numq+1) + "' " +
-           "placeholder='Tapez la reponse'/>"+
-           "<input class='checkbox' type='checkbox' checked='true'/> correcte"+
-           "<input class='reponse_qcm' type='text' id='reponse" +(numq+1) + "' " +
-           "name='reponse" +(numq+1) + "' " +
-           "placeholder='Tapez la reponse'/>"+
-           "<input class='checkbox' type='checkbox'/> correcte";
+                divR="<h6>Reponses : " + 
+                "<button type='button' class='button_ajouter' onclick='ajouter_reponse(" +(numq+1) + 
+                ")'>Reponse&nbsp;+</button> </h6>" +
 
-           }
-            nuevoDiv.innerHTML = divQ;
+                "<input type='hidden' name='reponses" +(numq+1) + "' id='reponses" +(numq+1) + "' value='2' />"+
+
+                "<input class='reponse_qcm' type='text' id='q" +(numq+1) + "reponse1' " +
+                "name='reponse" +(numq+1) + "' " +
+                "placeholder='Tapez la reponse' required />"+
+                "<input class='checkbox' type='checkbox' checked='true' "+
+                "id='q"+(numq+1)+"cb1'/> correcte"+
+
+                "<input class='reponse_qcm' type='text' id='q" +(numq+1) + "reponse2' " +
+                "name='reponse" +(numq+1) + "' " +
+                "placeholder='Tapez la reponse' required />"+
+                "<input class='checkbox' type='checkbox' "+
+                "id='q"+(numq+1)+"cb2'/> correcte";
+        }
+    
+            h6.appendChild(inputTaux);
+            h6.innerHTML+="%"+espacios+"Duree : ";
+            h6.appendChild(inputDuree);
+            h6.innerHTML+=" sec."+espacios;
+            h6.appendChild(selectF);
+            h6.appendChild(label);
+            h6.appendChild(inputFile);
+            h6.appendChild(bSupprimer);
+            h6.appendChild(question);
+
+            nuevoDiv.appendChild(h6);
+            nuevoDiv.innerHTML+=(divR);
+            
 
             document.getElementById('numeroq').value=(numq+1);
+            document.getElementById('maxq').value=(numq+1);
+            document.getElementById('nombreq').innerHTML="Questions #"+(numq+1);
             document.getElementById('questions').appendChild(nuevoDiv);
                   window.scrollTo(0, document.body.scrollHeight);
             }
+
+function verifier_questions(){
+    numq=parseInt(document.getElementById('numeroq').value);
+    maxq=parseInt(document.getElementById('maxq').value);
+
+    var sum_taux=0;
+    for (var i = 1; i <= maxq; i++) {
+        var input_taux= document.getElementById('taux'+i);
+        if(input_taux)
+            sum_taux+=parseInt(input_taux.value);
+    }
+
+    var valid = numq!=0 && sum_taux==100;
+
+    if(numq==0){
+        alert("Veillez ajouter au moins une question");
+    }else if(sum_taux!=100){
+        alert("La somme des taux doit etre 100%");
+    }
+
+    return valid;
+}
+
 function select_fichier(id){
     var valor=document.getElementById('select'+id).value;
     var milabel=document.getElementById('label_fichier'+id);
     var mifile=document.getElementById('fichier'+id);
 
-    if(valor=="none"){
-        mifile.disabled = true;
-        mifile.accept = '';
-        mifile.required = false;
-        milabel.style.backgroundColor="lightgrey";
-    }else{
-        mifile.disabled = false;
-        mifile.required = true;
-        milabel.style.backgroundColor="green";
-        mifile.accept=valor+"/*"
-    }
+    mifile.disabled = valor=="none";
+    mifile.required = valor!="none";
+    mifile.accept = valor=="none" ? '' : valor+"/*";
+    milabel.style.backgroundColor= valor=="none" ? "lightgrey" : "green";
 }
+
 function supprimer_question(num){
     document.getElementById("question"+num).remove();
+    numq=parseInt(document.getElementById('numeroq').value);
+    document.getElementById("numeroq").value=numq-1;
+    document.getElementById('nombreq').innerHTML="Questions #"+(numq-1);
     }
 
 document.getElementById('register_form').addEventListener('submit', async function(e) {

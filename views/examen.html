@@ -13,12 +13,12 @@
 <body >
     <section class="section_examen" >
         <h1>Nouveau Examen</h1>
-        <form id="examen_form" action="/profile" method="post" enctype="multipart/form-data">
+        <form id="examen_form" action="/valider_examen" method="post"  onsubmit="return verifier_questions()">
             <div class="inputbox2">
                 <input class="titre" type="text" id="titre" name="titre" placeholder="Titre" required>
             </div>
             <div class="inputbox2">
-                <textarea class="description" id="description" id="name" placeholder="Descrption de l'examen" ></textarea>
+                <textarea class="description" id="description" name="description" placeholder="Descrption de l'examen" ></textarea>
             </div>
 
             <div class="inputbox2">
@@ -31,27 +31,23 @@
                    <option value="3 MIP S5">3 MIP S5</option>
                    <option value="3 MIP S6">3 MIP S6</option>
                 </select>
-
-
             </div>
 
             <hr>
-           	<h5>Questions</h5>
+           	<h5 id="nombreq">Questions #0</h5>
             <div class="row" id="questions"></div>
 
-            <input type="hidden" name="numeroq" id="numeroq" value="0">
+            <input type="hidden" name="numeroq" id="numeroq" value="0"/>
+            <input type="hidden" name="maxq" id="maxq" value="0"/>
 
-
-
-        <div class="row">
-            <p>Ajouter une autre question 
-                <button type="button" class="button_ajouter" onclick="ajouter_question('D')"> Directe</button> 
-                ou 
-                <button type="button" class="button_ajouter" onclick="ajouter_question('Q')">QCM</button> 
-            </p>  
-            <button type="submit">Valider</button>
-        </div>
-            
+            <div class="row">
+                <p>Ajouter une autre question 
+                    <button type="button" class="button_ajouter" onclick="ajouter_question('Directe')"> Directe</button> 
+                    ou 
+                    <button type="button" class="button_ajouter" onclick="ajouter_question('QCM')">QCM</button> 
+                </p>  
+                <button type="submit">Valider</button>
+            </div>
         </form>
     </section> 
     <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
