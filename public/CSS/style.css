@@ -64,6 +64,13 @@ form{
     position: relative;
     margin: 1rem 0;
 }
+.inputbox2{
+    position: relative;
+    margin: 1rem 0;
+    background-color: #F8F8F8;
+    padding-bottom: 15px;
+}
+
 .inputbox input{
     width: 100%;
     height: 3rem;
@@ -114,7 +121,7 @@ form{
         padding: 3px;
 }
  .inputbox2 .question{
-    width: 100%;
+    width: 90%;
     height: 50px;
     background-color: transparent;
     font-size: 1.5;
@@ -123,7 +130,7 @@ form{
         padding: 3px;
 }
  .inputbox2 .description{
-    width: 100%;
+    width: 90%;
     height: 70px;
     background-color: transparent;
     font-size: 1.5;
@@ -132,7 +139,7 @@ form{
         padding: 3px;
 }
  .inputbox2 .reponse{
-    width: 100%;
+    width: 85%;
     height: 50px;
     background-color: transparent;
     font-size: 1.5;
@@ -266,6 +273,18 @@ button{
     border-radius: 2rem;
     margin: 1.5rem 0;
 }
+.button_valider{
+    width: 50%;
+    height: 3rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border:none;
+    outline: none;
+    border-radius: 2rem;
+    margin: 1.5rem 0;
+    background-color: palegreen;
+    align-self: center;
+}
 .button_ajouter{
     height: 30px;
     width: 80px;
@@ -275,8 +294,10 @@ button{
     outline: none;
     border-radius: 10px;
     padding: 5px;
-    margin-left: 30px;
-    margin-right: 30px;
+    margin-left: 15px;
+    margin-right: 15px;
+    background-color: skyblue;
+
 }
 .button_supprimer{
     height: 30px;
@@ -287,7 +308,7 @@ button{
     outline: none;
     border-radius: 10px;
     padding: 5px;
-    background-color: pink;
+    background-color: deeppink;
     margin-left: 70px;
 }
 

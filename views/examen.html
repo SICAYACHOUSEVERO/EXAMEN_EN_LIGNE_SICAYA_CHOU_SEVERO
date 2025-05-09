@@ -13,7 +13,7 @@
 <body >
     <section class="section_examen" >
         <h1>Nouveau Examen</h1>
-        <form id="examen_form" action="/valider_examen" method="post"  onsubmit="return verifier_questions()">
+        <form id="examen_form" action="/valider_examen" method="post" enctype="multipart/form-data" onsubmit="return verifier_questions()">
             <div class="inputbox2">
                 <input class="titre" type="text" id="titre" name="titre" placeholder="Titre" required>
             </div>
@@ -41,12 +41,16 @@
             <input type="hidden" name="maxq" id="maxq" value="0"/>
 
             <div class="row">
-                <p>Ajouter une autre question 
-                    <button type="button" class="button_ajouter" onclick="ajouter_question('Directe')"> Directe</button> 
-                    ou 
-                    <button type="button" class="button_ajouter" onclick="ajouter_question('QCM')">QCM</button> 
-                </p>  
-                <button type="submit">Valider</button>
+                <center>
+                    <p>Ajouter une autre question 
+                        <button type="button" class="button_ajouter" onclick="ajouter_question('Directe')"> Directe</button> 
+                        ou 
+                        <button type="button" class="button_ajouter" onclick="ajouter_question('QCM')">QCM</button> 
+                    </p>  
+
+               
+                   <button type="submit" class="button_valider">Valider</button>
+               </center> 
             </div>
         </form>
     </section> 

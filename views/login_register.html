@@ -44,7 +44,7 @@
             <!-- Inscription -->
             <section class="register">
                 <h1>Inscription</h1>
-                <form id="register_form">
+                <form id="register_form" method="POST" action="/inserer_utilisateur">
                     <div class="row">
                         <div class="col lg-4 ">
                             <div class="inputbox">
@@ -84,7 +84,11 @@
                         <div class="col lg-4 ">
                             <div class="inputbox">
                                 <ion-icon name="transgender-outline"></ion-icon>
-
+                                <select name="cible" id="cible" required>
+                                   <option value="" disabled selected>Sexe</option>
+                                   <option value="M">Male</option>
+                                   <option value="F">Female</option>
+                                </select>
                             </div>
                         </div>
                     </div>
