@@ -37,7 +37,13 @@
 
 		<h5>Mes Controles</h5>
 
-
+			<% controls.forEach( control => { %>
+		
+			<p><b><a href="/resultats/<%= control.id %>" target="_blank">Voir</a></b>
+				La note : <b><%= control.note %></b> </p>
+		
+			<hr>
+		<% }); %>
 	<% } %>
 
 

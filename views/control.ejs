@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Control</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="/CSS/style.css">
+</head>
+<body style="margin: 30px;" class="body">
+	<div style="margin-inline: 50px;">
+	<h5 style="padding-inline: 50px;"><%= examen.titre %> pour <%= examen.cible %></h5>
+	<p style="padding-inline: 50px;"><%= examen.description %></p>
+	<hr>
+	</div>
+<center>
+	<h5><%= questions.length %> Questions</h5>
+		<form action="/valider_control" method="post">
+			<input type="hidden" name="examen" value="<%= examen.id %>">
+
+	<% 
+		var numP = 0;
+		questions.forEach( question => { 
+			numP = numP + 1;
+
+			var display = numP==1 ? "block" : "none";
+		%>
+
+			<div id="question<%= numP %>" name="question<%= numP %>" style="display: <%= display %>;margin-top: 10px;margin-bottom: 50px;margin-inline: 200px;background-color: #F8F8F8;padding: 50px;" 
+				width="500px" height="500px">
+
+					<h4>Question #<%= numP %> <%= question.tipe %><br> <%= question.taux %>% de la note</h4>
+					<p><img src="/images/fichier.png" width="100px" height="75px" alt="Fichier" /> 
+						<b><%= question.enonce %></b>
+					</p>
+						<% if(question.tipe=="Directe"){ %>
+							<input  width="500px" height="30px" placeholder="Tappez la reponse" type="text" name="reponse<%= question.id %>" style="padding: 8px;width: 70%;height: 50px;">
+						<% } else{ %>
+							<% 
+								question.reponses.forEach((reponse) => { 
+								%>			      
+			        	<p style="text-align: left;padding-left: 30%;">
+			        		<input style="margin-inline:15px;" type="checkbox" name="question<%= question.id %>cb<%= reponse.id %>">
+			        		<%= reponse.reponse %>
+			        		<input type="hidden" name="question<%= question.id %>reponse<%= reponse.id %>"
+			        		value="<%= reponse.reponse %>">
+			        	</p> 
+			    		<% }); %>
+						<% } %>
+
+
+
+		      
+						<hr>
+				<p>
+	      	<b id="temps"><%= question.duree %></b> <br>
+	      	<button id="valider<%= numP %>" type="button" class="button_valider" 
+	      	onclick="question_suivant(<%= numP %>,<%= questions.length %>)">Suivant</button>
+
+	      	<script type="text/javascript">
+	      		function question_suivant(num,max){
+	      			document.getElementById('question'+num).style.display="none";
+	      			document.getElementById('question'+(num + 1)).style.display="block";
+	      			if(num==max - 1){
+	      				document.getElementById('valider'+max).type="submit";
+	      				document.getElementById('valider'+max).innerHTML="Terminer";
+	      			}
+	      		}
+	      	</script>
+
+	    	</p>	
+	      </div>	
+
+
+		<% }); %>
+
+
+		</form>
+	</center>
+</body>
+</html>
