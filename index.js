@@ -38,9 +38,66 @@ app.get('/login', (req, res) => {
     }
   res.sendFile(path.join(__dirname, 'views', 'login_register.html'));
 });
+
 app.get('/nouveau_examen', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'examen.html'));
+  if (!req.session.utilisateur || req.session.utilisateur.type!="enseignant")
+    res.redirect('/login');
+
+  res.sendFile(path.join(__dirname, 'views', 'nouveau_examen.html'));
 });
+
+app.get('/examen/:id', (req, res) => {
+  var id = req.params.id;
+  var questions = null;
+
+  // Consulta para obtener el examen
+  const query = "SELECT * FROM examen WHERE id= ? ";
+  connection.query(query, [id], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Erreur: problème avec la base de données');
+    }
+    const examen = results[0];
+
+    // Consulta para obtener las preguntas
+    const queryQ = "SELECT * FROM question WHERE id_examen = ? ";
+    connection.query(queryQ, [examen.id], (err, resultsQ) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Erreur: problème avec la base de données');
+      }
+
+      questions = resultsQ;
+
+      // Crear un array de Promesas para obtener las respuestas
+      const queryPromises = questions.map((question, i) => {
+        return new Promise((resolve, reject) => {
+          const queryR = "SELECT * FROM reponse WHERE id_question = ? ";
+          connection.query(queryR, [question.id], (err, resultR) => {
+            if (err) {
+              reject(err);
+            }
+            questions[i].reponses = resultR; // Añadir las respuestas a la pregunta
+            resolve(); // Resolver la Promesa una vez se hayan añadido las respuestas
+          });
+        });
+      });
+
+      // Esperar a que todas las promesas de respuestas se resuelvan
+      Promise.all(queryPromises)
+        .then(() => {
+          // Ahora que todas las respuestas están disponibles, renderizamos la página
+          console.log(questions); // Puedes ver las preguntas y respuestas en la consola
+          res.render('examen', { examen, questions });
+        })
+        .catch((err) => {
+          console.error(err);
+          res.status(500).send('Erreur: problème avec les réponses');
+        });
+    });
+  });
+});
+
 
 app.get('/profile', (req, res) => {
   if (req.session.utilisateur) {
@@ -51,45 +108,70 @@ app.get('/profile', (req, res) => {
         return res.status(500).send('Erreur: problème avec la base de données');
       }
       const utilisateur = results[0];
-      res.render('profile', { utilisateur });
-    });
-  } 
-  else {
- 
-    const { email_login, password_login, tipe_login } = req.body;
-    const isEnseignant = tipe_login !== undefined;
-    const tabla = isEnseignant ? 'enseignant' : 'etudiant';
+      const tipe = req.session.utilisateur.type;
 
-    const query = "SELECT * FROM " + tabla + " WHERE mail = ? AND mot_de_passe = md5(?) ";
-    connection.query(query, [email_login, password_login], (err, results) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('Erreur: problème avec la base de données');
+      if(tipe=="enseignant"){
+        const query = "SELECT * FROM examen WHERE id_enseignant= ? ORDER BY id DESC ";
+        connection.query(query, [req.session.utilisateur.id], (err, resultsE) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send('Erreur: problème avec la base de données');
+          }
+          const examens=resultsE;
+          res.render('profile', { utilisateur,  tipe, examens });
+        });
+        
+      }else{
+        const query = "SELECT * FROM control WHERE id_etudiant= ? ORDER BY id DESC ";
+        connection.query(query, [req.session.utilisateur.id], (err, resultsC) => {
+          if (err) {
+            console.error(err);
+            return res.status(500).send('Erreur: problème avec la base de données');
+          }
+          const controls=resultsC;
+          res.render('profile', { utilisateur,  tipe, controls });
+        });
       }
-      if (results.length === 0) {
-        return res.status(401).send('Utilisateur non trouvé ou mot de passe incorrect');
-      }
-
-
-      const utilisateur = results[0];
-      req.session.utilisateur = {id: utilisateur.id,  type: tabla };
-
-      res.render('profile', { utilisateur });
     });
+  
+  }else{
+    res.redirect('/login');
   }
 });
 
+app.post('/after_login', (req, res) => {
+  const { email_login, password_login, tipe_login } = req.body;
+  const isEnseignant = tipe_login !== undefined;
+  const tabla = isEnseignant ? 'enseignant' : 'etudiant';
 
+  const query = "SELECT * FROM " + tabla + " WHERE mail = ? AND mot_de_passe = md5(?) ";
+  connection.query(query, [email_login, password_login], (err, results) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Erreur: problème avec la base de données');
+    }
+    if (results.length === 0) {
+      return res.status(401).send('Utilisateur non trouvé ou mot de passe incorrect');
+    }
+    req.session.utilisateur = { id: results[0].id,  type: tabla };
+    res.redirect('/profile');
+  });
+});
 
 app.post('/valider_examen', upload.none(), (req, res) => {
-
-
+    var numProfe=0;
+    if (req.session.utilisateur) {
+      numProfe=req.session.utilisateur.id;
+    }
+    else{
+      res.redirect('/login');
+    }
 
   const { titre, description, cible, numeroq, maxq } = req.body;
-  const numProfe=1; //a definir a traves de la sesion //restriccion a los usuarios
+ //a definir a traves de la sesion //restriccion a los usuarios
 
-  const sql = 'INSERT INTO examen VALUES (null, ?, ?, ?, 1)';
-  connection.query(sql, [titre, description, cible], (err, result) => {
+  const sql = 'INSERT INTO examen VALUES (null, ?, ?, ?, ?)';
+  connection.query(sql, [cible, titre, description, numProfe], (err, result) => {
     if (err) console.error(err);
     else{
 
@@ -111,8 +193,7 @@ app.post('/valider_examen', upload.none(), (req, res) => {
 
                   connection.query(sqlquestion, [ reponse ], (err, resultr) => {
                     if (err) console.error(err);
-                    else console.log("Respuesta insertada con exito #"+ resultr.insertId); });
-
+                   });
               }else{
                 const maxReponses = parseInt(req.body[`reponses${i}`]);
 
@@ -124,19 +205,18 @@ app.post('/valider_examen', upload.none(), (req, res) => {
                   const sqlquestion='INSERT INTO reponse VALUES (null, ?, ?, ' + resultq.insertId + ')';
                   connection.query(sqlquestion, [reponse, validite], (err, resultr) => {
                     if (err) console.error(err);
-                    else console.log("Respuesta insertada con exito #"+ resultr.insertId); });
+                   });
                 }
               }
 
-                console.log("Pregunta insertada con exito #"+ resultq.insertId);
             }
           });
 
         }
       }
-
-      res.send("examen insertado con exito con id = "+result.insertId);
+      res.redirect("/profile");
       }
+
   });
 
 
@@ -163,8 +243,6 @@ app.post('/valider_examen', upload.none(), (req, res) => {
   });*/
 });
 
-
-
 app.post('/inserer_utilisateur', (req, res) => {
   const { nom, prenom, email, password, ddns, sexe, etablissement, filiere, tipe } = req.body;
 
@@ -180,15 +258,12 @@ app.post('/inserer_utilisateur', (req, res) => {
       console.error(err);
     else {
       req.session.utilisateur = {id:result.insertId,  type: tabla };
-
        res.redirect('/profile');  
     }
 
   });
-
 });
 
-// Ruta para hacer la consulta a la tabla 'enseignant'
 app.get('/enseignants', (req, res) => {
   const sql = 'SELECT * FROM enseignant'; // Consulta SQL para obtener todos los registros
 
@@ -197,12 +272,7 @@ app.get('/enseignants', (req, res) => {
       return res.status(500).send('Error al obtener los datos');
     res.render('enseignants', { enseignants: results });
   });
-
 });
-
-//app.get('/', (req, res) => {
-//res.send('¡Hola Mundo desde Express!');
-//});
 
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en http://localhost:${PORT}`);

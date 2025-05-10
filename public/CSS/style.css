@@ -205,6 +205,29 @@ form{
     font-weight: 500;
 }
 
+.inputbox p{
+    height: 3rem;
+    border: none;
+    outline: none;
+    border-bottom: #fff solid 2px;
+    background-color: transparent;
+    color:#fff;
+    font-size: 1.5;
+    font-weight: 500;
+
+}
+
+.inputbox .ddns{
+    height: 3rem;
+    border: none;
+    outline: none;
+    border-bottom: #fff solid 2px;
+    background-color: transparent;
+    color:#fff;
+    font-size: 1.5;
+    font-weight: 500;
+}
+
 .inputbox .checkbox{
     width: 15px;
     height: 15px;
@@ -222,8 +245,12 @@ input[type="file"] {
   display: none;
 }
 
+
+
+
 /* Estilo del label como botón */
 .label_fichier {
+
   display: inline-block;
   padding: 10px 20px;
   background-color: lightgrey;
@@ -236,7 +263,10 @@ input[type="file"] {
     cursor: pointer; /* Hace que la etiqueta sea clickeable */
     top: 50%;
     left: 0;
+
 }
+
+
 
 .inputbox ion-icon{
     position: absolute;

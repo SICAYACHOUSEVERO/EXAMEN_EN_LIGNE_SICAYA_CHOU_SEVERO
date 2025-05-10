@@ -43,7 +43,7 @@ function ajouter_question(tipo){
 
 
     var hijos="<input id='taux"+(numq+1)+"' name='taux"+(numq+1)+"' "+
-    "type='number' class='taux' value='10' max='100' min='2' step='100' />%"+espacios+"Duree : "+
+    "type='number' class='taux' value='10' max='100' min='1' step='1' />%"+espacios+"Duree : "+
 
     "<input id='duree"+(numq+1)+"' name='duree"+(numq+1)+"' "+
     "type='number' class='taux' value='60' max='1800' min='30' step='10' /> sec."+espacios+

@@ -3,16 +3,44 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Enseignants</title>
+	<title>Profile <%= tipe %>
+</title>
 </head>
-<body>
+<body style="margin: 30px;">
 
-	<p>Prenom : <%= utilisateur.prenom %></p>
-	<p>Nom : <%= utilisateur.nom %></p>
+		<h2>Donnes personnelles</h2>
+
+	<p><% if(utilisateur.sexe=="M"){ %> Monsieur <% } else{ %> Madamme <% } %> 
+		<b><%= utilisateur.prenom %> <%= utilisateur.nom %></b></p>
 	<p>Email : <%= utilisateur.mail %></p>
-	<p>Sexe : <%= utilisateur.sexe %></p>
-	<p>Sexe : <%= utilisateur.filiere %></p>
+	<p>Etablissement : <%= utilisateur.etablissement %> Filiere : <%= utilisateur.filiere %></p>
 	<hr>
+
+	<h2>Espace de travail</h2>
+
+	<% if(tipe=="enseignant"){ %>
+		<h4>Mes Examens:  <a href="/nouveau_examen" target="_blank" >Creer un nouveau examen</a></h4>
+
+
+		<% examens.forEach( examen => { %>
+		
+			<p><b><a href="/examen/<%= examen.id %>" target="_blank">Voir</a></b>
+				public cible : <b><%= examen.cible %></b> | Titre : <b><%= examen.titre %></b></p>
+			<p>Description : <%= examen.description %></p>
+		
+			<hr>
+		<% }); %>
+
+
+
+	<% } else{ %>
+
+		<h5>Mes Controles</h5>
+
+
+	<% } %>
+
+
 
 </body>
 </html>

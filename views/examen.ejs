@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Examen</title>
+</head>
+<body style="margin: 30px;">
+
+	<p>Titre : <%= examen.titre %></p>
+	<p>Cible : <%= examen.cible %></p>
+	<p>Description : <%= examen.description %></p>
+	<hr>
+
+	<h4>Questions: </h4>
+	<% questions.forEach( question => { %>
+		<p>Mostrar Archivo : <!--fichiertipe_fichier --><%= question.tipe %> | Taux : <%= question.taux %>% | Duree : <%= question.duree %> sec. | <b><%= question.enonce %></b></p>
+
+		    <% question.reponses.forEach((reponse) => { %>
+      <div class="response">
+        <p><b>Reponse <%= reponse.validite %></b> <%= reponse.reponse %> </p> <!-- Muestra la validez -->
+      </div>
+    <% }); %>
+
+
+
+
+		<hr>
+		<% }); %>
+
+
+</body>
+</html>
