@@ -58,7 +58,7 @@ var note = 0;
             const maxAllowedDistance = Math.floor(correctAnswer.length * 0.1); // 10%
 
             note += distance <= maxAllowedDistance ? question.taux : 0;
-            console.log('La nota es '+ note);
+            console.log('Votre score est: '+ note);
             const correct = distance <= maxAllowedDistance ? "oui" : "non";
 
             const queryR = 'INSERT INTO reponse_control VALUES (null, ?, ?, ?, ?) ';
