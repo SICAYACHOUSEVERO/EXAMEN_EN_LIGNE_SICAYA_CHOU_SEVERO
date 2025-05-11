@@ -294,7 +294,7 @@ app.post('/after_login', (req, res) => {
 });
 
 app.post('/valider_examen', upload.none(), (req, res) => {
-  const numProfe=eq.session.utilisateur.id;
+  const numProfe=req.session.utilisateur.id;
   const { titre, description, cible, numeroq, maxq } = req.body;
 
   const sql = 'INSERT INTO examen VALUES (null, ?, ?, ?, ?)';
